@@ -1,10 +1,14 @@
 package com.inspiritstudio.testtab;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -22,14 +26,39 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+/*
+        Button btnLoad = (Button) findViewById(R.id.button);
 
+        View.OnClickListener listener = new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+               // MTRFragment hello = new MTRFragment();
+                HelloFragment hello = new HelloFragment();
+                fragmentTransaction.add(R.id.fragment_container, hello, "HELLO");
+                fragmentTransaction.commit();
+            }
+        };
+
+        btnLoad.setOnClickListener(listener);
+*/
         // Creating The Toolbar and setting it as the Toolbar for the activity
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
+//        Button btn1 = toolbar.findViewById()
+
         setSupportActionBar(toolbar);
-
-
+           /*
+        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+*/
         // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
 
         adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs);
@@ -53,8 +82,6 @@ public class MainActivity extends ActionBarActivity {
 
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(pager);
-
-
 
     }
 

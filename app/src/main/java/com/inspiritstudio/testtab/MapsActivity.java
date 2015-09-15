@@ -1,5 +1,6 @@
 package com.inspiritstudio.testtab;
 
+import android.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -12,7 +13,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends FragmentActivity  {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 

@@ -1,8 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar
-    android:layout_height="wrap_content"
+<android.support.v7.widget.Toolbar  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/actionbarT"
     android:layout_width="match_parent"
-    android:background="@color/ColorPrimary"
-    android:elevation="2dp"
-    android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+    android:layout_height="wrap_content"
+
+    android:minHeight="?attr/actionBarSize"
+    app:theme="@style/Base.Theme.AppCompat.CompactMenu" >
+
+    <LinearLayout
+        android:id="@+id/toolbarmenucontainer"
+        android:layout_width="match_parent"
+        android:weightSum="3"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Order"
+            android:id="@+id/button" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Active Order"
+            android:id="@+id/button2" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Menu"
+            android:id="@+id/button3" />
+
+    </LinearLayout>
+
+</android.support.v7.widget.Toolbar>
