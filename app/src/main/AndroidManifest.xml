@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.inspiritstudio.testtab" >
+    <uses-library android:name="com.google.android.maps" />
 
+    <uses-permission android:name="com.inspiritstudio.testtab.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -46,10 +48,9 @@
             android:name=".MapsActivity2"
             android:label="@string/title_activity_maps2" >
         </activity>
-        <activity
-            android:name=".MapsActivity3"
-            android:label="@string/title_activity_maps3" >
-        </activity>
+
     </application>
 
 </manifest>
+
+
