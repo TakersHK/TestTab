@@ -1,43 +1,27 @@
 package com.inspiritstudio.testtab;
 
 import android.content.Context;
-import android.location.Address;
 import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
-public class MapFragment extends Fragment implements GoogleMap.OnMarkerDragListener {
+public class MapFragment_backup_20150918 extends Fragment implements GoogleMap.OnMarkerDragListener {
 //public class MapFragment extends Fragment {
     private MyLocationListener locationListener;
     private LocationManager locationManager;
@@ -47,60 +31,28 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerDragListe
     private double latitude;
     private double longitude;
     private Location myLocation;
-    private Button btsubmit;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // inflat and return the layout
         View v = inflater.inflate(R.layout.fragment_location_info, container,
                 false);
-        //mMapView = (MapView) v.findViewById(R.id.mapView);
-        //mMapView.onCreate(savedInstanceState);
+        mMapView = (MapView) v.findViewById(R.id.mapView);
+        mMapView.onCreate(savedInstanceState);
 
-        //mMapView.onResume();// needed to get the map to display immediately
+        mMapView.onResume();// needed to get the map to display immediately
 
-        //try {
-        //    MapsInitializer.initialize(getActivity().getApplicationContext());
-        //} catch (Exception e) {
-        //    e.printStackTrace();
-        //
-        // }
-
-        //set on click listener ｏｆ　button +
-        btsubmit = (Button) v.findViewById(R.id.btSubmit);
-        btsubmit.setOnClickListener (new View.OnClickListener() {
-            public void onClick(View arg0) {
-                if (!isMapReady()) {
-                    return;
-                }
-
-                EditText etLocationName = (EditText) getActivity().findViewById(R.id.etLocationName);
-                String locationName = etLocationName.getText().toString().trim();
-                if (locationName.length() > 0) {
-                    locationNameToMarker(locationName);
-                } else {
-                    //showToast(R.string.msg_LocationNameIsEmpty);
-                }
-
-            }
-        });
-        //set on click listener of button -
-
-        if (googleMap == null) {
-            //googleMap = ((SupportMapFragment) getActivity().getSupportFragmentManager()
-
-            googleMap = ((SupportMapFragment) getChildFragmentManager()
-                            .findFragmentById(R.id.map)).getMap();
-            if (googleMap != null) {
-             //   setUpMap();
-            }
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        //googleMap = mMapView.getMap();
+        googleMap = mMapView.getMap();
         // Enable MyLocation Layer of Google Map
         googleMap.setMyLocationEnabled(true);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+
 
         // Get LocationManager object from System Service LOCATION_SERVICE
         //LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -135,9 +87,16 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerDragListe
          myLocation  = locationManager
                 .getLastKnownLocation(provider);
 
+
+        //Location myLocation = locationManager.getLastKnownLocation(provider);
+
+        // +
+
+
+        //-
+
         // set map type
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        //googleMap.getUiSettings().setMyLocationButtonEnabled(true);
         latitude =  myLocation.getLatitude();
         longitude = myLocation.getLongitude();
 
@@ -152,22 +111,22 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerDragListe
                         .build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+
 //map marker start +
+
         googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             public void onCameraChange(CameraPosition arg0) {
-
+/*
                 googleMap.clear();
                 int maxResults = 1;
 
                 try {
-                    /*
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    */
                     Geocoder gc = new Geocoder(getActivity(), Locale.getDefault());
                     LatLng markerPosition = new MarkerOptions().position(arg0.target).getPosition();
 
@@ -183,74 +142,119 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerDragListe
                     e.printStackTrace();
                     //Log.e("Canont get Address!");
                 }
-
+                */
             }
 
         });
+
+//map marker end-
 /*
-        googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            public void onCameraChange(CameraPosition arg0) {
-
+        int maxResults = 1;
+        try {
+            Geocoder gc = new Geocoder(getActivity(), Locale.getDefault());
+            List<Address> addresses = gc.getFromLocation(myLocation.getLatitude(),myLocation.getLongitude(), maxResults);
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("You are here!").snippet(addresses.get(0).toString()));
+            /*longitude
+            if (addresses.size() == 1) {
+                return addresses.get(0);
+            } else {
+                return null;
             }
 
-        });
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            //Log.e("Canont get Address!");
+        }
 */
+
+        /*
+        // latitude and longitude
+        double latitude = 17.385044;
+        double longitude = 78.486671;
+
+        // create marker
+        MarkerOptions marker = new MarkerOptions().position(
+                new LatLng(latitude, longitude)).title("Hello Maps");
+
+        // Changing marker icon
+        marker.icon(BitmapDescriptorFactory
+                .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
+
+        // adding marker
+        //googleMap.addMarker(marker);
+        // Enable MyLocation Layer of Google Map
+        googleMap.setMyLocationEnabled(true);
+
+       // googleMap.setOnMarkerDragListener(this);
+
+        //test+
+        // Get LocationManager object from System Service LOCATION_SERVICE
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        // Create a criteria object to retrieve provider
+        Criteria criteria = new Criteria();
+
+        // Get the name of the best provider
+        String provider = locationManager.getBestProvider(criteria, true);
+
+        // Get Current Location
+        Location myLocation = locationManager.getLastKnownLocation(provider);
+
+        // set map type
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+        // Get latitude of the current location
+        latitude = myLocation.getLatitude();
+
+        // Get longitude of the current location
+        longitude = myLocation.getLongitude();
+
+        // Create a LatLng object for the current location
+        LatLng latLng = new LatLng(latitude, longitude);
+
+        // Show the current location in Google Map
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        //get map stree name
+        int maxResults = 1;
+        try {
+            Geocoder gc = new Geocoder(getActivity(), Locale.getDefault());
+            List<Address> addresses = gc.getFromLocation(latitude, longitude, maxResults);
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("You are here!").snippet(addresses.get(0).toString()));
+            /*
+            if (addresses.size() == 1) {
+                return addresses.get(0);
+            } else {
+                return null;
+            }
+
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            //Log.e("Canont get Address!");
+        }
+        */
+        // Zoom in the Google Map
+       // googleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+        //googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("You are here!").snippet("Consider yourself located"));
+       // googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("You are here!").snippet(addresses.get(0)));
+
+
+        //test-
+        //CameraPosition cameraPosition = new CameraPosition.Builder()
+        //        .target(new LatLng(17.385044, 78.486671)).zoom(12).build();
+        //googleMap.animateCamera(CameraUpdateFactory
+        //        .newCameraPosition(cameraPosition));
+
+        // Perform any camera updates here
         return v;
     }
 
-    private boolean isMapReady() {
-        if (googleMap == null) {
-            Toast.makeText(getActivity(), "map is not ready", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        return true;
-    }
-    public void onLocationNameClick(View view) {
-        if (!isMapReady()) {
-            return;
-        }
-
-        EditText etLocationName = (EditText) getActivity().findViewById(R.id.etLocationName);
-        String locationName = etLocationName.getText().toString().trim();
-        if (locationName.length() > 0) {
-            locationNameToMarker(locationName);
-        } else {
-            //showToast(R.string.msg_LocationNameIsEmpty);
-        }
-    }
-
-    private void locationNameToMarker(String locationName) {
-        googleMap.clear();
-        Geocoder geocoder = new Geocoder(getActivity());
-        List<Address> addressList = null;
-        int maxResults = 1;
-        try {
-            addressList = geocoder
-                    .getFromLocationName(locationName, maxResults);
-        }
-        catch (IOException e) {
-            // Log.e(TAG, e.toString());
-        }
-
-        if (addressList == null || addressList.isEmpty()) {
-            //showToast(R.string.msg_LocationNameNotFound);
-        } else {
-            Address address = addressList.get(0);
-
-            LatLng position = new LatLng(address.getLatitude(),
-                    address.getLongitude());
-
-            String snippet = address.getAddressLine(0);
-
-            googleMap.addMarker(new MarkerOptions().position(position)
-                    .title(locationName).snippet(snippet));
-
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(position).zoom(15).build();
-            googleMap.animateCamera(CameraUpdateFactory
-                    .newCameraPosition(cameraPosition));
-        }
-    }
 
     class MyLocationListener implements LocationListener {
         public void onLocationChanged(Location location) {
@@ -271,7 +275,6 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerDragListe
     @Override
     public void onResume() {
         super.onResume();
-        setUpMapIfNeeded();
 /*
         Criteria criteria = new Criteria();
         provider = locationManager.getBestProvider(criteria, true);
@@ -283,40 +286,23 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerDragListe
         }
 */
 
-//        mMapView.onResume();
+        mMapView.onResume();
 
 
 
-    }
-
-    private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (googleMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
-            googleMap = ((SupportMapFragment) getChildFragmentManager()
-                    .findFragmentById(R.id.map)).getMap();
-            // Check if we were successful in obtaining the map.
-            //if (googleMap != null) {
-            //    setUpMap();
-            //}
-        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        //mMapView.onPause();
-        //this.onPause();
-
-        //setUpMapIfNeeded();
-        //locationManager.removeUpdates(locationListener);
+        mMapView.onPause();
+        locationManager.removeUpdates(locationListener);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        //mMapView.onDestroy();
+        mMapView.onDestroy();
         locationManager.removeUpdates(locationListener);
         locationManager.setTestProviderEnabled(provider, false);
     }
