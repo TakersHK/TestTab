@@ -7,6 +7,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -48,6 +49,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerDragListe
     private double longitude;
     private Location myLocation;
     private Button btsubmit;
+    private EditText etAddress;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,7 +68,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerDragListe
         //    e.printStackTrace();
         //
         // }
-
+        etAddress = (EditText) v.findViewById(R.id.etLocationName);
         //set on click listener ｏｆ　button +
         btsubmit = (Button) v.findViewById(R.id.btSubmit);
         btsubmit.setOnClickListener (new View.OnClickListener() {
@@ -130,6 +132,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerDragListe
 
                     @Override
                     public void onLocationChanged(final Location location) {
+                       // etAddress.setText(location.toString());
                     }
                 });
          myLocation  = locationManager
@@ -153,50 +156,57 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerDragListe
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
 //map marker start +
+
+
         googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             public void onCameraChange(CameraPosition arg0) {
+                //etAddress.setText(arg0.toString());
+                GetAddress getaddress = new GetAddress();
 
-                googleMap.clear();
-                int maxResults = 1;
-
-                try {
-                    /*
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                    */
-                    Geocoder gc = new Geocoder(getActivity(), Locale.getDefault());
-                    LatLng markerPosition = new MarkerOptions().position(arg0.target).getPosition();
-
-                    //List<Address> addresses = gc.getFromLocation(latitude,longitude, maxResults);
-                    List<Address> addresses = gc.getFromLocation(markerPosition.latitude,markerPosition.longitude, maxResults);
-                    //googleMap.addMarker(new MarkerOptions().position(arg0.target).title("You are here").snippet(addresses.get(0).toString())).showInfoWindow();
-
-                    Toast.makeText(getActivity().getApplicationContext(),addresses.get(0).toString() , Toast.LENGTH_LONG).show();
-                    addresses.clear();
-                }
-                catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                    //Log.e("Canont get Address!");
-                }
-
+                getaddress.execute(arg0);
             }
 
         });
-/*
-        googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            public void onCameraChange(CameraPosition arg0) {
 
-            }
-
-        });
-*/
         return v;
     }
+
+    private class GetAddress extends AsyncTask<CameraPosition,Void, String> {
+        @Override
+        protected String doInBackground(CameraPosition... params) {
+            List<Address> addresses;
+            String add;
+            add=null;
+            addresses=null;
+            try {
+                Geocoder gc = new Geocoder(getActivity(), Locale.getDefault());
+                LatLng markerPosition = new MarkerOptions().position(params[0].target).getPosition();
+
+                //List<Address> addresses = gc.getFromLocation(latitude,longitude, maxResults);
+                addresses = gc.getFromLocation(markerPosition.latitude, markerPosition.longitude, 1);
+                //googleMap.addMarker(new MarkerOptions().position(arg0.target).title("You are here").snippet(addresses.get(0).toString())).showInfoWindow();
+                Log.d("STATE", addresses.get(0).toString());
+                //Toast.makeText(getActivity().getApplicationContext(), addresses.get(0).toString(), Toast.LENGTH_LONG).show();
+
+                add =  addresses.get(0).toString();
+                addresses.clear();
+            }
+            catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                //Log.e("Canont get Address!");
+            }
+
+            return add;
+        }
+
+        @Override
+        protected void onPostExecute(String result){
+            super.onPostExecute(result);
+            etAddress.setText(result);
+        }
+    }
+
 
     private boolean isMapReady() {
         if (googleMap == null) {
@@ -254,11 +264,12 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerDragListe
 
     class MyLocationListener implements LocationListener {
         public void onLocationChanged(Location location) {
-            //if (location != null) {
-            //    loc.setText(LocationSample.showLocation(location));
-            //} else {
-            //    loc.setText("Cannot get location!");
-            //}
+            //EditText etLocationName =(EditText) v.find
+            if (location != null) {
+            //    etLocationName.setText(LocationSample.showLocation(location));
+            } else {
+             //   etLocationName.setText("Cannot get location!");
+            }
         }
         public void onProviderDisabled(String provider) {
         }
